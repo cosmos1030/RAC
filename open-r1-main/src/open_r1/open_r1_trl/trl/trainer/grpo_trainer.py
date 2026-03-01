@@ -641,7 +641,7 @@ python
         # _get_train_sampler and _prepare_inputs.
         self._buffered_inputs = None
 
-        model.warnings_issued["estimate_tokens"] = True
+        # model.warnings_issued["estimate_tokens"] = True
 
         if self.use_liger_loss:
             if not is_liger_kernel_available():
