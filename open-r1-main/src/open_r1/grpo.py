@@ -107,10 +107,11 @@ def main(script_args, training_args, model_args):
         prompt.append({"role": "user", "content": example[prompt_column]})
         return {"prompt": prompt}
 
-    dataset = dataset.map(to_conversation)
-    for split in dataset:
-        if "messages" in dataset[split].column_names:
-            dataset[split] = dataset[split].remove_columns("messages")
+    if not training_args.prune:
+        dataset = dataset.map(to_conversation)
+        for split in dataset:
+            if "messages" in dataset[split].column_names:
+                dataset[split] = dataset[split].remove_columns("messages")
 
     # ── Trainer ────────────────────────────────────────────────────────────
     for fld in ("dataset_name", "dataset_config_name", "dataset_split"):

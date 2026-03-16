@@ -16,11 +16,18 @@ def _safe_load_dataset(
     Try `load_dataset`, and if it complains that the dataset was
     saved with `save_to_disk`, fall back to `load_from_disk`.
     """
+    # JSONL / JSON 파일 직접 경로인 경우
+    if Path(name_or_path).suffix in ('.jsonl', '.json') and Path(name_or_path).exists():
+        ds = datasets.load_dataset('json', data_files=name_or_path, split=split or 'train')
+        if split is None:
+            ds = DatasetDict({'train': ds})
+        return ds
+
     try:
         return datasets.load_dataset(name_or_path, config, split=split)
-    except ValueError as e:
-        # Typical message: “You are trying to load a dataset that was saved using `save_to_disk`…”
-        if "save_to_disk" in str(e) or Path(name_or_path).exists():
+    except (ValueError, FileNotFoundError) as e:
+        # Typical message: "You are trying to load a dataset that was saved using `save_to_disk`"
+        if 'save_to_disk' in str(e) or Path(name_or_path).exists():
             ds = datasets.load_from_disk(name_or_path)
             # If the caller requested a split, honour it when possible
             if split is not None and isinstance(ds, DatasetDict):

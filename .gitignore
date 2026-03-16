@@ -39,3 +39,15 @@ build/
 .env.local
 open-r1-main/src/open_r1/__pycache__/rewards.cpython-312.pyc
 open-r1-main/src/open_r1/__pycache__/__init__.cpython-312.pyc
+
+archive/
+*archive/
+math_trace/
+
+__pycache__/
+*.pyc
+*__pycache__/
+
+
+*results*/
+models/
